@@ -12,6 +12,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
   --marun-tua:#7f1d1d;
@@ -80,17 +82,16 @@ body{margin:0;background:var(--bg);color:var(--teks);font-size:.9rem;overflow-x:
 .toast-kbk.error{background:#fee2e2;color:#991b1b;border-color:#fecaca}
 @keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 
-/* Dropdown modern pengganti picker hitam Android */
-.dd-overlay{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(2px);z-index:2600;display:none;align-items:flex-end;justify-content:center}
-.dd-overlay.show{display:flex}
-.dd-panel{background:#fff;width:100%;max-width:460px;max-height:74vh;border-radius:22px 22px 0 0;box-shadow:0 -14px 38px rgba(0,0,0,.28);display:flex;flex-direction:column;animation:ddUp .2s ease;overflow:hidden}
-@keyframes ddUp{from{transform:translateY(42px);opacity:0}to{transform:none;opacity:1}}
-@media(min-width:768px){.dd-overlay{align-items:center}.dd-panel{border-radius:22px;animation:ddPop .18s ease}@keyframes ddPop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}}
-.dd-head{position:relative;display:flex;align-items:center;gap:.75rem;padding:1rem 1.1rem .75rem;border-bottom:1px solid #eef2f6}
-.dd-grip{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:44px;height:4px;border-radius:999px;background:#e5e7eb}
-.dd-title{font-weight:900;color:var(--marun-tua);margin:0;font-size:.95rem}.dd-close{margin-left:auto;border:0;background:#f1f5f9;color:#64748b;width:34px;height:34px;border-radius:50%}
-.dd-search{padding:.75rem 1rem;border-bottom:1px solid #f1f5f9}.dd-search input{width:100%;border:1.5px solid #dbe3ef;border-radius:13px;padding:.62rem .85rem;outline:none}.dd-search input:focus{border-color:var(--marun)}
-.dd-list{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.5rem .7rem 1rem;flex:1}.dd-item{display:flex;align-items:center;gap:.65rem;padding:.78rem .85rem;border-radius:13px;cursor:pointer;color:var(--teks);font-weight:600}.dd-item:hover,.dd-item:active{background:#fee2e2}.dd-item.active{background:#fee2e2;color:var(--marun);font-weight:900}.dd-item i{margin-left:auto;color:var(--marun)}.dd-empty{text-align:center;color:var(--muted);padding:1.5rem}
+/* Dropdown modern pengganti picker hitam Android: tampil langsung di bawah kolom, bukan bottom sheet */
+.dd-overlay{position:fixed;inset:0;background:transparent;backdrop-filter:none;z-index:2600;display:none}
+.dd-overlay.show{display:block}
+.dd-panel{background:#fff;position:fixed;width:320px;max-height:360px;border-radius:16px;box-shadow:0 18px 42px rgba(15,23,42,.22);display:flex;flex-direction:column;overflow:hidden;border:1px solid #e5e7eb;animation:ddDrop .14s ease}
+@keyframes ddDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.dd-head{display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem .55rem;border-bottom:1px solid #eef2f6}
+.dd-grip{display:none}
+.dd-title{font-weight:900;color:var(--marun-tua);margin:0;font-size:.9rem}.dd-close{margin-left:auto;border:0;background:#f1f5f9;color:#64748b;width:30px;height:30px;border-radius:50%}
+.dd-search{padding:.6rem .8rem;border-bottom:1px solid #f1f5f9}.dd-search input{width:100%;border:1.5px solid #dbe3ef;border-radius:12px;padding:.55rem .75rem;outline:none}.dd-search input:focus{border-color:var(--marun)}
+.dd-list{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.35rem .5rem .6rem;flex:1}.dd-item{display:flex;align-items:center;gap:.65rem;padding:.68rem .75rem;border-radius:11px;cursor:pointer;color:var(--teks);font-weight:600}.dd-item:hover,.dd-item:active{background:#fee2e2}.dd-item.active{background:#fee2e2;color:var(--marun);font-weight:900}.dd-item i{margin-left:auto;color:var(--marun)}.dd-empty{text-align:center;color:var(--muted);padding:1.2rem}
 select.form-select{background-color:#fff!important;color:var(--teks)!important;color-scheme:light}
 .print-area{display:none}@media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{display:block;position:absolute;left:0;top:0;width:100%;background:#fff;padding:20px}}
 </style>
@@ -180,7 +181,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
       <div class="card"><div class="card-header"><i class="fa-solid fa-file-lines me-1"></i> Rekap & Laporan</div><div class="card-body"><div class="row g-3 align-items-end mb-3">
         <div class="col-md-3"><label class="form-label">Jenis Laporan</label><select class="form-select" id="lapJenis"><option value="semua">Seluruh Anggota</option><option value="cohort">Per Cohort</option><option value="prodi">Per Program Studi</option><option value="kab">Per Kabupaten/Kota</option><option value="wilayah">Per Wilayah</option><option value="belumLengkap">Data Belum Lengkap</option></select></div>
         <div class="col-md-4"><label class="form-label">Nilai Filter</label><select class="form-select" id="lapNilai"><option value="">Semua</option></select></div>
-        <div class="col-md-5 d-flex gap-2 flex-wrap"><button class="btn btn-marun" onclick="previewLaporan()"><i class="fa-solid fa-eye me-1"></i>Tampilkan</button><button class="btn btn-outline-success" onclick="exportCSV()"><i class="fa-solid fa-file-csv me-1"></i>CSV</button><button class="btn btn-outline-primary" onclick="exportExcel()"><i class="fa-solid fa-file-excel me-1"></i>Excel</button><button class="btn btn-outline-dark" onclick="printLaporan()"><i class="fa-solid fa-print me-1"></i>Print/PDF</button></div>
+        <div class="col-md-5 d-flex gap-2 flex-wrap"><button class="btn btn-marun" onclick="previewLaporan()"><i class="fa-solid fa-eye me-1"></i>Tampilkan</button><button class="btn btn-outline-danger" onclick="exportPDF()"><i class="fa-solid fa-file-pdf me-1"></i>Unduh PDF</button><button class="btn btn-outline-dark" onclick="printLaporan()"><i class="fa-solid fa-print me-1"></i>Cetak</button></div>
       </div><div id="lapPreview" class="table-responsive"><div class="empty"><i class="fa-solid fa-file-circle-question"></i>Pilih laporan lalu tampilkan</div></div></div></div>
     </section>
 
@@ -212,7 +213,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
 </div>
 <div class="toast-kbk" id="toastKBK"><i class="fa-solid fa-circle-check"></i><span id="toastText">Berhasil</span></div>
 <div class="dd-overlay" id="ddOverlay">
-  <div class="dd-panel">
+  <div class="dd-panel" id="ddPanel">
     <div class="dd-head"><span class="dd-grip"></span><h6 class="dd-title" id="ddTitle">Pilih</h6><button class="dd-close" type="button" onclick="closeDropdown()"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="dd-search" id="ddSearchWrap"><input id="ddSearch" placeholder="Cari pilihan..." autocomplete="off"></div>
     <div class="dd-list" id="ddList"></div>
@@ -253,7 +254,7 @@ function loading(on,t='Menghubungkan...'){
 async function api(payload,show=true){if(show)loading(true);try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});const out=await r.json();return out}catch(e){setStatusOffline();alert('Gagal koneksi server: '+e.message);throw e}finally{if(show)loading(false)}}
 function toggleSidebar(force){const open=force===undefined?!$('sidebar').classList.contains('open'):!!force;$('sidebar').classList.toggle('open',open);$('backdrop').classList.toggle('show',open)}
 const titles={dashboard:'Dashboard',input:'Input Data',anggota:'Data Anggota',laporan:'Rekap & Laporan',hubungi:'Hubungi Admin',profil:'Profil',admin:'Admin'};
-function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('.side-link').forEach(a=>a.classList.toggle('active',a.dataset.page===p));$('pageTitle').textContent=titles[p]||p;toggleSidebar(false);if(p==='anggota')loadAnggota();if(p==='laporan')setupLaporan();if(p==='admin')applyAdminUI();}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('.side-link').forEach(a=>a.classList.toggle('active',a.dataset.page===p));$('pageTitle').textContent=titles[p]||p;toggleSidebar(false);if(p==='anggota')loadAnggota();if(p==='laporan'){setupLaporan();previewLaporan();}if(p==='admin')applyAdminUI();}
 document.querySelectorAll('.side-link').forEach(a=>a.onclick=()=>showPage(a.dataset.page));
 function tick(){const d=new Date();$('clockBadge').innerHTML='<i class="fa-regular fa-clock me-1"></i>'+d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}setInterval(tick,30000);
 async function init(){tick();applyAdminUI();initModernDropdown();await loadBootstrap();initPWA();await loadAnggota(false);renderDashboard();}
@@ -326,15 +327,51 @@ async function saveAnggota(e){
 }
 async function deleteAnggota(id){if(!S.token){alert('Login admin dulu');return}if(!confirm('Hapus data ini?'))return;const r=await api({action:'deleteAnggota',token:S.token,id});if(r.ok){await refreshAll();renderAnggota()}else alert(r.error)}
 async function refreshAll(){await loadBootstrap();await loadAnggota(false);renderDashboard();}
-function setupLaporan(){let jenis=$('lapJenis').value,sel=$('lapNilai');let vals=[];if(jenis==='cohort')vals=[...new Set(S.anggota.map(r=>r.Cohort).filter(Boolean))];if(jenis==='prodi')vals=[...new Set(S.anggota.map(r=>r['Program Studi']).filter(Boolean))];if(jenis==='kab')vals=[...new Set(S.anggota.map(r=>r['Kabupaten/Kota']).filter(Boolean))];if(jenis==='wilayah')vals=[...new Set(S.anggota.map(r=>r.Wilayah).filter(Boolean))];sel.innerHTML='<option value="">Semua</option>'+vals.sort().map(v=>`<option>${esc(v)}</option>`).join('')}
-$('lapJenis').addEventListener('change',setupLaporan);
-function getLapRows(){let j=$('lapJenis').value,n=$('lapNilai').value,rows=S.anggota.slice();if(j==='cohort'&&n)rows=rows.filter(r=>String(r.Cohort)===n);if(j==='prodi'&&n)rows=rows.filter(r=>r['Program Studi']===n);if(j==='kab'&&n)rows=rows.filter(r=>r['Kabupaten/Kota']===n);if(j==='wilayah'&&n)rows=rows.filter(r=>r.Wilayah===n);if(j==='belumLengkap')rows=rows.filter(r=>!r['Kabupaten/Kota']||!r['Program Studi']||!r['Nama Kadet']||!r['No HP']||r['No HP']==='-'||r['Status Data']==='Perlu Dicek');return rows}
+function setupLaporan(){
+  let jenis=$('lapJenis').value,sel=$('lapNilai');
+  let vals=[];
+  if(jenis==='cohort') vals=[...new Set(S.anggota.map(r=>r.Cohort).filter(Boolean))].sort((a,b)=>(parseInt(a,10)||0)-(parseInt(b,10)||0));
+  if(jenis==='prodi') vals=[...new Set(S.anggota.map(r=>r['Program Studi']).filter(Boolean))].sort();
+  if(jenis==='kab') vals=[...new Set(S.anggota.map(r=>r['Kabupaten/Kota']).filter(Boolean))].sort();
+  if(jenis==='wilayah') vals=[...new Set(S.anggota.map(r=>r.Wilayah).filter(Boolean))].sort();
+
+  if(jenis==='semua' || jenis==='belumLengkap'){
+    sel.innerHTML='<option value="">Tidak perlu filter</option>';
+    sel.disabled=true;
+  }else{
+    sel.disabled=false;
+    const label={cohort:'Semua Cohort',prodi:'Semua Program Studi',kab:'Semua Kabupaten/Kota',wilayah:'Semua Wilayah'}[jenis]||'Semua';
+    sel.innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  }
+  S.lapRows=[];
+}
+$('lapJenis').addEventListener('change',()=>{setupLaporan();previewLaporan();});
+$('lapNilai').addEventListener('change',()=>{S.lapRows=[];previewLaporan();});
+function getLapRows(){let j=$('lapJenis').value,n=String($('lapNilai').value||'').trim(),rows=S.anggota.slice();if(j==='cohort'&&n)rows=rows.filter(r=>String(r.Cohort||'').trim()===n);if(j==='prodi'&&n)rows=rows.filter(r=>String(r['Program Studi']||'').trim()===n);if(j==='kab'&&n)rows=rows.filter(r=>String(r['Kabupaten/Kota']||'').trim()===n);if(j==='wilayah'&&n)rows=rows.filter(r=>String(r.Wilayah||'').trim()===n);if(j==='belumLengkap')rows=rows.filter(r=>!r['Kabupaten/Kota']||!r['Program Studi']||!r['Nama Kadet']||!r['No HP']||r['No HP']==='-'||r['Status Data']==='Perlu Dicek');return rows}
 function previewLaporan(){const rows=getLapRows();S.lapRows=rows;$('lapPreview').innerHTML=tableHTML(rows);}
 function tableHTML(rows){return `<table class="table table-bordered table-sm"><thead><tr><th>No</th><th>Cohort</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Kab/Kota</th><th>Wilayah</th><th>No HP</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.Cohort)}</td><td>${esc(r['Nama Kadet'])}</td><td>${esc(r['Nama Orang Tua'])}</td><td>${esc(r['Program Studi'])}</td><td>${esc(r['Kabupaten/Kota'])}</td><td>${esc(r.Wilayah)}</td><td>${esc(r['No HP'])}</td></tr>`).join('')||'<tr><td colspan="8" class="text-center">Tidak ada data</td></tr>'}</tbody></table><div class="small text-muted">Total: ${rows.length} data</div>`}
 function rowsToAOA(rows){return [['No','Cohort','Nama Kadet','Nama Orang Tua','Program Studi','Domisili','Kabupaten/Kota','Wilayah','No HP','Status Data'],...rows.map((r,i)=>[i+1,r.Cohort,r['Nama Kadet'],r['Nama Orang Tua'],r['Program Studi'],r['Domisili Lengkap'],r['Kabupaten/Kota'],r.Wilayah,r['No HP'],r['Status Data']])]}
-function exportCSV(){const rows=S.lapRows.length?S.lapRows:getLapRows();const csv=rowsToAOA(rows).map(row=>row.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv'}),'Laporan_KBK_UNHAN.csv')}
-function exportExcel(){const rows=S.lapRows.length?S.lapRows:getLapRows();const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(rowsToAOA(rows));XLSX.utils.book_append_sheet(wb,ws,'Laporan');XLSX.writeFile(wb,'Laporan_KBK_UNHAN.xlsx')}
-function printLaporan(){const rows=S.lapRows.length?S.lapRows:getLapRows();$('printArea').innerHTML='<h3>KBK UNHAN RI Korda Jateng-DIY</h3><p>Laporan Data Anggota</p>'+tableHTML(rows);window.print();}
+function exportPDF(){
+  const rows=getLapRows();
+  if(!rows.length){alert('Tidak ada data untuk PDF.');return;}
+  if(!window.jspdf || !window.jspdf.jsPDF){alert('Library PDF belum siap. Coba ulangi setelah halaman selesai dimuat.');return;}
+  const doc=new jspdf.jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+  const title='Laporan Data Anggota KBK UNHAN RI Korda Jateng-DIY';
+  doc.setFontSize(13);doc.setFont(undefined,'bold');doc.text(title,40,36);
+  doc.setFontSize(9);doc.setFont(undefined,'normal');doc.text('Dicetak: '+new Date().toLocaleString('id-ID'),40,52);
+  const aoa=rowsToAOA(rows);
+  const head=[aoa[0]];
+  const body=aoa.slice(1);
+  if(doc.autoTable){
+    doc.autoTable({head:head,body:body,startY:66,styles:{fontSize:7,cellPadding:3,overflow:'linebreak'},headStyles:{fillColor:[139,30,30]},columnStyles:{0:{cellWidth:28},1:{cellWidth:42},2:{cellWidth:105},3:{cellWidth:105},4:{cellWidth:105},5:{cellWidth:120},6:{cellWidth:90},7:{cellWidth:70},8:{cellWidth:70},9:{cellWidth:70}}});
+  }else{
+    doc.text(JSON.stringify(body.slice(0,20)),40,80);
+  }
+  doc.save('Laporan_KBK_UNHAN.pdf');
+}
+function exportCSV(){const rows=getLapRows();const csv=rowsToAOA(rows).map(row=>row.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv'}),'Laporan_KBK_UNHAN.csv')}
+function exportExcel(){const rows=getLapRows();const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(rowsToAOA(rows));XLSX.utils.book_append_sheet(wb,ws,'Laporan');XLSX.writeFile(wb,'Laporan_KBK_UNHAN.xlsx')}
+function printLaporan(){const rows=getLapRows();$('printArea').innerHTML='<h3>KBK UNHAN RI Korda Jateng-DIY</h3><p>Laporan Data Anggota</p>'+tableHTML(rows);window.print();}
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 async function kirimPesan(e){e.preventDefault();const data={nama:$('m_nama').value,hp:$('m_hp').value,kategori:$('m_kategori').value,pesan:$('m_pesan').value};const r=await api({action:'kirimPesan',data});if(r.ok){alert('Pesan berhasil dikirim ke admin');e.target.reset()}else alert(r.error)}
 async function login(e){e.preventDefault();const r=await api({action:'login',username:$('loginUser').value,password:$('loginPass').value});if(r.ok){S.token=r.token;S.user=r.username;sessionStorage.setItem('kbk_token',S.token);sessionStorage.setItem('kbk_user',S.user);applyAdminUI();alert('Login berhasil')}else alert(r.error)}
@@ -433,9 +470,27 @@ function openDropdown(sel){
   $('ddSearch').value='';
   $('ddSearchWrap').style.display=opts.length>8?'block':'none';
   renderDropdownList(opts,'');
+
+  const panel=$('ddPanel');
+  const rect=sel.getBoundingClientRect();
+  const margin=10;
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  const width=Math.min(Math.max(rect.width,260), vw-24);
+  let left=Math.min(Math.max(rect.left,12), vw-width-12);
+  let top=rect.bottom+6;
+  const searchH=opts.length>8?58:0;
+  const estimatedH=Math.min(360, 58 + searchH + Math.max(1, Math.min(opts.length, 7))*52 + 18);
+  const maxH=Math.min(estimatedH, vh-24);
+  // Hanya pindah ke atas kalau tinggi aktual panel memang tidak muat di bawah.
+  if(top+maxH>vh) top=Math.max(12, rect.top-maxH-6);
+  panel.style.left=left+'px';
+  panel.style.top=top+'px';
+  panel.style.width=width+'px';
+  panel.style.maxHeight=maxH+'px';
+
   $('ddOverlay').classList.add('show');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>{ if(opts.length>8) $('ddSearch').focus(); },120);
+  if(opts.length>8) setTimeout(()=>$('ddSearch').focus(),80);
 }
 function renderDropdownList(opts,q){
   const ql=(q||'').toLowerCase();
@@ -447,7 +502,6 @@ function renderDropdownList(opts,q){
 }
 function closeDropdown(){
   $('ddOverlay').classList.remove('show');
-  document.body.style.overflow='';
   ddTarget=null;
 }
 function initModernDropdown(){
@@ -538,5 +592,5 @@ function exportLogCSV(){
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22049ce3973a8eb',t:'MTc4NTIwNDAwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
