@@ -62,7 +62,7 @@ body{margin:0;background:var(--bg);color:var(--teks);font-size:.9rem;overflow-x:
 .form-control,.form-select{border-radius:12px;border:1.5px solid #dbe3ef;font-size:.88rem;padding:.62rem .85rem}.form-control:focus,.form-select:focus{border-color:var(--marun);box-shadow:0 0 0 .2rem rgba(139,30,30,.12)}
 .form-label{font-weight:700;font-size:.78rem;color:#334155}.required::after{content:' *';color:#dc2626}
 .btn{border-radius:12px;font-weight:700}.btn-marun{background:var(--marun);border-color:var(--marun);color:#fff}.btn-marun:hover{background:var(--marun-tua);border-color:var(--marun-tua);color:#fff}.btn-gold{background:var(--emas);border-color:var(--emas);color:#fff}.btn-gold:hover{background:#a16207;color:#fff}
-.badge-soft{background:#fee2e2;color:var(--marun);border:1px solid #fecaca;border-radius:999px;padding:.42rem .65rem;font-weight:800}.badge-online{background:#dcfce7;color:#166534;border-color:#bbf7d0}.badge-warn{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.badge-soft{background:#fee2e2;color:var(--marun);border:1px solid #fecaca;border-radius:999px;padding:.42rem .65rem;font-weight:800}.badge-online{background:#dcfce7;color:#166534;border-color:#bbf7d0}.badge-warn{background:#fff7ed;color:#c2410c;border-color:#fed7aa}#statusBadge{font-size:.78rem;padding:.34rem .55rem;line-height:1.1}#statusBadge i{font-size:.72rem}
 .page{display:none;animation:fade .22s}.page.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .table{font-size:.84rem}.table thead th{background:#f8fafc;color:#475569;text-transform:uppercase;font-size:.74rem;white-space:nowrap}.table td{vertical-align:middle}.act-btn{width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:10px}
 .chart-box{position:relative;min-height:280px;width:100%}
@@ -90,7 +90,7 @@ body{margin:0;background:var(--bg);color:var(--teks);font-size:.9rem;overflow-x:
 .dd-head{display:flex;align-items:center;gap:.75rem;padding:.75rem .9rem .55rem;border-bottom:1px solid #eef2f6}
 .dd-grip{display:none}
 .dd-title{font-weight:900;color:var(--marun-tua);margin:0;font-size:.9rem}.dd-close{margin-left:auto;border:0;background:#f1f5f9;color:#64748b;width:30px;height:30px;border-radius:50%}
-.dd-search{padding:.6rem .8rem;border-bottom:1px solid #f1f5f9}.dd-search input{width:100%;border:1.5px solid #dbe3ef;border-radius:12px;padding:.55rem .75rem;outline:none}.dd-search input:focus{border-color:var(--marun)}
+.dd-search{display:none!important;padding:.6rem .8rem;border-bottom:1px solid #f1f5f9}.dd-search input{width:100%;border:1.5px solid #dbe3ef;border-radius:12px;padding:.55rem .75rem;outline:none}.dd-search input:focus{border-color:var(--marun)}
 .dd-list{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.35rem .5rem .6rem;flex:1}.dd-item{display:flex;align-items:center;gap:.65rem;padding:.68rem .75rem;border-radius:11px;cursor:pointer;color:var(--teks);font-weight:600}.dd-item:hover,.dd-item:active{background:#fee2e2}.dd-item.active{background:#fee2e2;color:var(--marun);font-weight:900}.dd-item i{margin-left:auto;color:var(--marun)}.dd-empty{text-align:center;color:var(--muted);padding:1.2rem}
 select.form-select{background-color:#fff!important;color:var(--teks)!important;color-scheme:light}
 .print-area{display:none}@media print{body *{visibility:hidden}.print-area,.print-area *{visibility:visible}.print-area{display:block;position:absolute;left:0;top:0;width:100%;background:#fff;padding:20px}}
@@ -161,8 +161,8 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
           <div class="col-12"><label class="form-label required">Domisili / Alamat Lengkap</label><textarea class="form-control" id="f_domisili" rows="2" required></textarea></div>
           <div class="col-md-6"><label class="form-label required">Kabupaten/Kota</label><select class="form-select" id="f_kab" onchange="updateWilayahPreview()" required></select><div class="form-text" id="wilayahPreview">Wilayah: -</div></div>
           <div class="col-md-6"><label class="form-label">No HP / WhatsApp</label><input class="form-control" id="f_hp" placeholder="0812xxxx"></div>
-          <div class="col-md-6"><label class="form-label">Status Data</label><select class="form-select" id="f_status"></select></div>
-          <div class="col-md-6"><label class="form-label">Catatan</label><input class="form-control" id="f_catatan"></div>
+          <div class="col-12"><select class="form-select d-none" id="f_status"></select><div class="form-text"><i class="fa-solid fa-circle-info me-1"></i>Status data ditentukan otomatis oleh sistem. Jika ada data wajib yang kosong, status menjadi <b>Perlu Dicek</b>.</div></div>
+          <div class="col-12"><label class="form-label">Catatan</label><input class="form-control" id="f_catatan"></div>
         </div><hr><div class="text-end"><button type="button" class="btn btn-light me-1" onclick="resetForm()">Reset</button><button class="btn btn-marun"><i class="fa-solid fa-floppy-disk me-1"></i>Simpan Data</button></div></form>
       </div></div>
     </section>
@@ -251,13 +251,43 @@ function loading(on,t='Menghubungkan...'){
   if(on){syncCounter++;setStatusSync();}
   else{syncCounter=Math.max(0,syncCounter-1);if(syncCounter===0)setStatusOnline();}
 }
-async function api(payload,show=true){if(show)loading(true);try{const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});const out=await r.json();return out}catch(e){setStatusOffline();alert('Gagal koneksi server: '+e.message);throw e}finally{if(show)loading(false)}}
+async function api(payload,show=true){
+  if(show)loading(true);
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),20000);
+  try{
+    const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller.signal});
+    const out=await r.json();
+    setStatusOnline();
+    return out;
+  }catch(e){
+    setStatusOffline();
+    const msg=e.name==='AbortError'?'Koneksi terlalu lama / timeout. Periksa internet atau buka ulang aplikasi.':e.message;
+    alert('Gagal koneksi server: '+msg);
+    throw e;
+  }finally{
+    clearTimeout(timer);
+    if(show)loading(false);
+  }
+}
 function toggleSidebar(force){const open=force===undefined?!$('sidebar').classList.contains('open'):!!force;$('sidebar').classList.toggle('open',open);$('backdrop').classList.toggle('show',open)}
 const titles={dashboard:'Dashboard',input:'Input Data',anggota:'Data Anggota',laporan:'Rekap & Laporan',hubungi:'Hubungi Admin',profil:'Profil',admin:'Admin'};
 function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('.side-link').forEach(a=>a.classList.toggle('active',a.dataset.page===p));$('pageTitle').textContent=titles[p]||p;toggleSidebar(false);if(p==='anggota')loadAnggota();if(p==='laporan'){setupLaporan();previewLaporan();}if(p==='admin')applyAdminUI();}
 document.querySelectorAll('.side-link').forEach(a=>a.onclick=()=>showPage(a.dataset.page));
 function tick(){const d=new Date();$('clockBadge').innerHTML='<i class="fa-regular fa-clock me-1"></i>'+d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}setInterval(tick,30000);
-async function init(){tick();applyAdminUI();initModernDropdown();await loadBootstrap();initPWA();await loadAnggota(false);renderDashboard();}
+async function init(){
+  tick();applyAdminUI();initModernDropdown();
+  try{
+    await loadBootstrap();
+    initPWA();
+    await loadAnggota(false);
+    renderDashboard();
+    setStatusOnline();
+  }catch(e){
+    console.error(e);
+    setStatusOffline();
+  }
+}
 async function loadBootstrap(){const r=await api({action:'bootstrap'},true);if(!r.ok){alert(r.error);return}S.master=r.master||{};S.settings=r.settings||{};S.dashboard=r.dashboard||{};fillAllSelects();applySettings();}
 function masterVals(k){return (S.master[k]||[]).filter(x=>(x.Status||'Aktif')==='Aktif')}
 function opt(k,empty='-- Pilih --'){let h=empty?`<option value="">${empty}</option>`:'';masterVals(k).forEach(x=>h+=`<option value="${esc(x.Nilai)}" data-wilayah="${esc(x.Wilayah)}" data-provinsi="${esc(x.Provinsi)}">${esc(x.Nilai)}</option>`);return h}
@@ -313,17 +343,46 @@ function renderAnggota(){
   }).join(''):'<tr><td colspan="9"><div class="empty"><i class="fa-solid fa-folder-open"></i>Data tidak ditemukan</div></td></tr>';
   $('infoAnggota').textContent=`Total tampil: ${rows.length} dari ${S.anggota.length} data`;
 }
+function normalisasiHpClient(hp){
+  let angka=String(hp||'').replace(/\D/g,'');
+  if(angka.startsWith('62')) angka=angka.slice(2);
+  if(angka.startsWith('0')) angka=angka.slice(1);
+  return angka;
+}
+function cekDuplikatForm(){
+  const id=$('f_id').value;
+  const cohort=String($('f_cohort').value||'').trim();
+  const hp=normalisasiHpClient($('f_hp').value);
+  const kab=String($('f_kab').value||'').trim().toLowerCase();
+  if(!cohort || !hp || hp.length<8 || !kab) return [];
+  return S.anggota.filter(r=>String(r.ID)!==String(id) && String(r['Status Data']||'').toLowerCase()!=='nonaktif' && String(r.Cohort||'').trim()===cohort && normalisasiHpClient(r['No HP'])===hp && String(r['Kabupaten/Kota']||'').trim().toLowerCase()===kab);
+}
+
 function resetForm(){$('formAnggota').reset();$('f_id').value='';updateWilayahPreview();}
 function editAnggota(id){const r=S.anggota.find(x=>x.ID===id);if(!r)return;showPage('input');$('f_id').value=r.ID;$('f_cohort').value=r.Cohort;$('f_prodi').value=r['Program Studi'];$('f_ortu').value=r['Nama Orang Tua'];$('f_kadet').value=r['Nama Kadet'];$('f_domisili').value=r['Domisili Lengkap'];$('f_kab').value=r['Kabupaten/Kota'];$('f_hp').value=r['No HP'];$('f_status').value=r['Status Data'];$('f_catatan').value=r.Catatan;updateWilayahPreview();}
 async function saveAnggota(e){
   e.preventDefault();
   // Input data baru boleh dilakukan publik. Edit data lama tetap hanya admin.
   if(!S.token && $('f_id').value){alert('Edit data hanya bisa dilakukan oleh Admin.');return;}
-  const data={ID:S.token?$('f_id').value:'',Cohort:$('f_cohort').value,'Program Studi':$('f_prodi').value,'Nama Orang Tua':$('f_ortu').value,'Nama Kadet':$('f_kadet').value,'Domisili Lengkap':$('f_domisili').value,'Kabupaten/Kota':$('f_kab').value,'No HP':$('f_hp').value,'Status Data':$('f_status').value,Catatan:$('f_catatan').value};
+
+  const dup=cekDuplikatForm();
+  let statusKirim=$('f_status').value;
+  if(dup.length){
+    const contoh=dup.slice(0,3).map(d=>`- ${d['Nama Kadet']} / ${d['Nama Orang Tua']}`).join('\\n');
+    const lanjut=confirm(`Data terindikasi duplikat karena Cohort, No HP, dan Kabupaten/Kota sama dengan data yang sudah ada:
+
+${contoh}
+
+Tetap simpan data ini sebagai Duplikat Terindikasi?`);
+    if(!lanjut) return;
+    statusKirim='Duplikat Terindikasi';
+  }
+
+  const data={ID:S.token?$('f_id').value:'',Cohort:$('f_cohort').value,'Program Studi':$('f_prodi').value,'Nama Orang Tua':$('f_ortu').value,'Nama Kadet':$('f_kadet').value,'Domisili Lengkap':$('f_domisili').value,'Kabupaten/Kota':$('f_kab').value,'No HP':$('f_hp').value,'Status Data':statusKirim,Catatan:$('f_catatan').value};
   const payload={action:'saveAnggota',data};
   if(S.token) payload.token=S.token;
   const r=await api(payload);
-  if(r.ok){alert('Data berhasil disimpan');resetForm();await refreshAll();showPage('anggota')}else alert(r.error)
+  if(r.ok){alert(dup.length?'Data berhasil disimpan dengan status Duplikat Terindikasi':'Data berhasil disimpan');resetForm();await refreshAll();showPage('anggota')}else alert(r.error)
 }
 async function deleteAnggota(id){if(!S.token){alert('Login admin dulu');return}if(!confirm('Hapus data ini?'))return;const r=await api({action:'deleteAnggota',token:S.token,id});if(r.ok){await refreshAll();renderAnggota()}else alert(r.error)}
 async function refreshAll(){await loadBootstrap();await loadAnggota(false);renderDashboard();}
@@ -416,6 +475,17 @@ function showToast(msg,type='success'){
   clearTimeout(window.__toastTimer);
   window.__toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
 }
+function compressCanvasToTarget_(canvas, targetKb){
+  // Kompres bertahap sampai mendekati target ukuran.
+  // Target default: di bawah 80 KB agar aman disimpan di Google Sheet dan cepat dibaca HP.
+  let quality=0.82;
+  let data=canvas.toDataURL('image/jpeg', quality);
+  while((data.length*0.75/1024)>targetKb && quality>0.45){
+    quality-=0.08;
+    data=canvas.toDataURL('image/jpeg', quality);
+  }
+  return data;
+}
 function handleLogo(input){
   const f=input.files[0];
   if(!f)return;
@@ -424,20 +494,31 @@ function handleLogo(input){
   rd.onload=e=>{
     const img=new Image();
     img.onload=()=>{
-      // Logo dikompres supaya aman disimpan di Google Sheet.
-      // Jika memakai base64 asli dari kamera/HP, sering terlalu besar dan tidak tampil.
-      const size=220;
+      // Kompres otomatis logo:
+      // 1. Dibuat persegi 180x180 px.
+      // 2. Background putih supaya logo transparan tetap rapi.
+      // 3. JPEG quality diturunkan bertahap sampai kurang lebih < 80 KB.
+      // Ini mencegah aplikasi lama di status "Menghubungkan" karena base64 logo terlalu besar.
+      const size=180;
       const cv=document.createElement('canvas');
       cv.width=size; cv.height=size;
       const ctx=cv.getContext('2d');
-      ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,size,size);
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(0,0,size,size);
+
       const scale=Math.min(size/img.width,size/img.height);
-      const w=Math.round(img.width*scale), h=Math.round(img.height*scale);
+      const w=Math.round(img.width*scale);
+      const h=Math.round(img.height*scale);
       ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
-      S.logoTemp=cv.toDataURL('image/jpeg',0.82);
+
+      const beforeKb=Math.round((e.target.result.length*0.75)/1024);
+      S.logoTemp=compressCanvasToTarget_(cv,80);
+      const afterKb=Math.round((S.logoTemp.length*0.75)/1024);
+
+      // Preview langsung, tapi penyimpanan permanen tetap setelah klik Simpan Pengaturan.
       $('sideLogo').innerHTML='<img src="'+S.logoTemp+'">';
       $('profilLogo').innerHTML='<img src="'+S.logoTemp+'">';
-      showToast('Logo siap. Klik Simpan Pengaturan agar tersimpan permanen.');
+      showToast('Logo otomatis dikompres '+beforeKb+' KB → '+afterKb+' KB. Klik Simpan Pengaturan.');
     };
     img.onerror=()=>showToast('Gagal membaca gambar logo','error');
     img.src=e.target.result;
@@ -468,7 +549,7 @@ function openDropdown(sel){
   $('ddTitle').textContent=getSelectLabel(sel);
   const opts=[...sel.options];
   $('ddSearch').value='';
-  $('ddSearchWrap').style.display=opts.length>8?'block':'none';
+  $('ddSearchWrap').style.display='none';
   renderDropdownList(opts,'');
 
   const panel=$('ddPanel');
@@ -479,8 +560,7 @@ function openDropdown(sel){
   const width=Math.min(Math.max(rect.width,260), vw-24);
   let left=Math.min(Math.max(rect.left,12), vw-width-12);
   let top=rect.bottom+6;
-  const searchH=opts.length>8?58:0;
-  const estimatedH=Math.min(360, 58 + searchH + Math.max(1, Math.min(opts.length, 7))*52 + 18);
+  const estimatedH=Math.min(360, 58 + Math.max(1, Math.min(opts.length, 7))*52 + 18);
   const maxH=Math.min(estimatedH, vh-24);
   // Hanya pindah ke atas kalau tinggi aktual panel memang tidak muat di bawah.
   if(top+maxH>vh) top=Math.max(12, rect.top-maxH-6);
@@ -490,7 +570,6 @@ function openDropdown(sel){
   panel.style.maxHeight=maxH+'px';
 
   $('ddOverlay').classList.add('show');
-  if(opts.length>8) setTimeout(()=>$('ddSearch').focus(),80);
 }
 function renderDropdownList(opts,q){
   const ql=(q||'').toLowerCase();
@@ -592,5 +671,5 @@ function exportLogCSV(){
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22049ce3973a8eb',t:'MTc4NTIwNDAwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
