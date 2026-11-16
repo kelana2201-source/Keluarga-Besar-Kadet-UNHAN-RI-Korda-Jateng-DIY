@@ -110,6 +110,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
     <a class="side-link" data-page="anggota"><i class="fa-solid fa-users"></i> Data Anggota</a>
     <a class="side-link" data-page="laporan"><i class="fa-solid fa-file-lines"></i> Rekap & Laporan</a>
     <a class="side-link" data-page="hubungi"><i class="fa-solid fa-headset"></i> Hubungi Admin</a>
+    <a class="side-link" data-page="panduan"><i class="fa-solid fa-book-open"></i> Panduan</a>
     <a class="side-link" data-page="profil"><i class="fa-solid fa-circle-info"></i> Profil</a>
     <a class="side-link" data-page="admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
   </nav>
@@ -147,7 +148,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
       <div class="row g-3">
         <div class="col-lg-4"><div class="card h-100"><div class="card-header">Ringkasan Wilayah</div><div class="card-body mini-list" id="wilayahBox"></div></div></div>
         <div class="col-lg-4"><div class="card h-100"><div class="card-header">Data Terbaru</div><div class="card-body mini-list" id="terbaruBox"></div></div></div>
-        <div class="col-lg-4"><div class="card h-100"><div class="card-header">Data Perlu Dilengkapi</div><div class="card-body" id="lengkapBox"></div></div></div>
+        <div class="col-lg-4"><div class="card h-100"><div class="card-header">Data Perlu Dilengkapi</div><div class="card-body" id="lengkapBox"></div><div class="card-footer"><button class="btn btn-sm btn-outline-danger" onclick="lihatBelumLengkap()">Lihat data belum lengkap</button></div></div></div>
       </div>
     </section>
 
@@ -174,7 +175,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
         <div class="col-md-3"><label class="form-label">Prodi</label><select class="form-select" id="filterProdi" onchange="renderAnggota()"></select></div>
         <div class="col-md-2"><label class="form-label">Kab/Kota</label><select class="form-select" id="filterKab" onchange="renderAnggota()"></select></div>
         <div class="col-md-2 d-grid"><button class="btn btn-outline-danger" onclick="loadAnggota()"><i class="fa-solid fa-rotate me-1"></i>Refresh</button></div>
-      </div><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No</th><th>Cohort</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Kab/Kota</th><th>No HP</th><th>Status</th><th class="text-end">Aksi</th></tr></thead><tbody id="tbodyAnggota"></tbody></table></div><div class="small text-muted" id="infoAnggota"></div></div></div>
+      </div><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No</th><th>Cohort</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Kab/Kota</th><th>No HP</th><th>Status</th><th class="text-end">Aksi</th></tr></thead><tbody id="tbodyAnggota"></tbody></table></div><div class="form-check my-2"><input class="form-check-input" type="checkbox" id="filterBelumLengkap" onchange="renderAnggota()"><label class="form-check-label" for="filterBelumLengkap">Hanya data belum lengkap</label></div><div class="small text-muted" id="infoAnggota"></div></div></div>
     </section>
 
     <section class="page" id="page-laporan">
@@ -189,6 +190,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
       <div class="row justify-content-center"><div class="col-lg-7"><div class="card"><div class="card-header"><i class="fa-solid fa-headset me-1"></i> Hubungi Admin</div><div class="card-body"><p class="text-muted small">Gunakan form ini untuk koreksi data, permintaan edit, lapor duplikat, pertanyaan, atau saran.</p><form onsubmit="kirimPesan(event)"><div class="row g-3"><div class="col-md-6"><label class="form-label required">Nama Pengirim</label><input class="form-control" id="m_nama" required></div><div class="col-md-6"><label class="form-label">No HP / WA</label><input class="form-control" id="m_hp"></div><div class="col-12"><label class="form-label required">Kategori</label><select class="form-select" id="m_kategori" onchange="toggleKategoriLainnya()" required></select></div><div class="col-12 d-none" id="wrapKategoriLainnya"><label class="form-label required">Tulis Kategori Lainnya</label><input class="form-control" id="m_kategori_lain" placeholder="Contoh: Koreksi nomor HP / Usulan fitur / dll"></div><div class="col-12"><label class="form-label required">Pesan</label><textarea class="form-control" id="m_pesan" rows="5" required></textarea></div></div><hr><div class="text-end"><button class="btn btn-marun"><i class="fa-solid fa-paper-plane me-1"></i>Kirim ke Admin</button></div></form></div></div></div></div>
     </section>
 
+    <section class="page" id="page-panduan"><div class="card"><div class="card-header">Panduan Penggunaan</div><div class="card-body"><ol><li>Gunakan Input Data untuk mendaftarkan data baru. Jika nomor HP belum diketahui, boleh dikosongkan.</li><li>Untuk memperbaiki data yang sudah ada, kirim permintaan melalui Hubungi Admin. Admin akan memeriksanya.</li><li>Untuk meminta laporan, pilih Rekap &amp; Laporan, tekan Unduh, lalu lengkapi formulir yang muncul. Admin memeriksa dan mengirim laporan secara terpisah.</li><li>Admin dapat melihat pesan masuk, memperbaiki indikasi duplikat, dan membuat cadangan.</li></ol><p>Data yang tampil publik dapat disalin orang lain. Jangan bagikan informasi yang tidak perlu.</p></div></div></section>
     <section class="page" id="page-profil">
       <div class="row justify-content-center"><div class="col-lg-8"><div class="card text-center"><div class="card-body py-5"><div class="logo-box mx-auto mb-3" style="width:110px;height:110px;border-radius:28px" id="profilLogo"><i class="fa-solid fa-shield-halved" style="font-size:3rem"></i></div><h4 class="fw-bold text-danger" id="profilNama">KELUARGA BESAR KADET UNHAN RI</h4><h6 class="fw-bold text-primary" id="profilSub">KORDA JATENG-DIY</h6><p class="text-muted mt-3" id="profilDesc"></p><button class="btn btn-gold mt-3" onclick="showPage('admin')"><i class="fa-solid fa-user-shield me-1"></i>Masuk Admin</button></div></div></div></div>
     </section>
@@ -198,7 +200,7 @@ select.form-select{background-color:#fff!important;color:var(--teks)!important;c
       <div id="adminPanel" class="d-none"><ul class="nav nav-pills mb-3 flex-wrap gap-1"><li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#admData">Kelola Data</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admPesan" onclick="loadPesan()">Kotak Masuk</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admPeng" onclick="loadPengumumanAdmin()">Pengumuman</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admMaster" onclick="renderMaster()">Master Data</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admImport">Import</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admBackup">Backup</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admDuplikat" onclick="loadDuplikat()">Duplikat</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admLog" onclick="loadLog()">Log Aktivitas</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#admSetting">Pengaturan</button></li></ul>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="admData"><div class="card"><div class="card-header">Kelola Data Anggota</div><div class="card-body"><button class="btn btn-outline-danger mb-2" onclick="showPage('anggota')">Buka Tabel Anggota</button><p class="text-muted small">Edit dan hapus data dapat dilakukan dari tabel Data Anggota setelah login admin.</p></div></div></div>
-          <div class="tab-pane fade" id="admPesan"><div class="card"><div class="card-header">Kotak Masuk Admin</div><div class="card-body"><div class="table-responsive"><table class="table"><thead><tr><th>Waktu</th><th>Nama</th><th>HP</th><th>Kategori</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tbPesan"></tbody></table></div></div></div></div>
+          <div class="tab-pane fade" id="admPesan"><div class="card"><div class="card-header">Kotak Masuk Admin</div><div class="card-body"><div id="pesanEditArea"></div><div class="d-flex align-items-end gap-3 flex-wrap mb-3"><div><label for="filterPesan" class="form-label">Filter status</label><select id="filterPesan" class="form-select" onchange="renderPesan()"><option value="">Semua</option><option>Baru</option><option>Dibaca</option><option>Diproses</option><option>Selesai</option></select></div><span id="jumlahPesanBaru" class="badge-soft"></span></div><div class="table-responsive"><table class="table"><thead><tr><th>Waktu</th><th>Nama</th><th>HP</th><th>Kategori</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tbPesan"></tbody></table></div></div></div></div>
           <div class="tab-pane fade" id="admPeng"><div class="card mb-3"><div class="card-header">Tambah/Edit Pengumuman</div><div class="card-body"><form onsubmit="savePengumuman(event)"><input type="hidden" id="p_id"><div class="row g-2"><div class="col-md-3"><label class="form-label">Tanggal</label><input type="date" class="form-control" id="p_tanggal"></div><div class="col-md-6"><label class="form-label required">Judul</label><input class="form-control" id="p_judul" required></div><div class="col-md-3"><label class="form-label">Status</label><select class="form-select" id="p_status"><option>Tampil</option><option>Sembunyi</option></select></div><div class="col-12"><label class="form-label required">Isi</label><textarea class="form-control" id="p_isi" rows="3" required></textarea></div></div><div class="text-end mt-2"><button class="btn btn-marun">Simpan</button></div></form></div></div><div class="card"><div class="card-header">Daftar Pengumuman</div><div class="card-body"><div id="listPengumumanAdmin"></div></div></div></div>
           <div class="tab-pane fade" id="admMaster"><div class="card"><div class="card-header">Master Data</div><div class="card-body"><div class="row g-2 mb-3"><div class="col-md-3"><select class="form-select" id="masterKategori" onchange="renderMaster()"><option>Cohort</option><option>Prodi</option><option>KabKota</option><option>StatusData</option><option>RoleAdmin</option><option>KategoriPesan</option><option>StatusPesan</option><option>StatusPengumuman</option></select></div><div class="col-md-4"><input class="form-control" id="masterNilai" placeholder="Nilai baru"></div><div class="col-md-2"><input class="form-control" id="masterWilayah" placeholder="Wilayah"></div><div class="col-md-2"><input class="form-control" id="masterProvinsi" placeholder="Provinsi"></div><div class="col-md-1 d-grid"><button class="btn btn-marun" onclick="saveMaster()">+</button></div></div><div class="table-responsive"><table class="table"><thead><tr><th>ID</th><th>Kategori</th><th>Nilai</th><th>Wilayah</th><th>Provinsi</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tbMaster"></tbody></table></div></div></div></div>
           <div class="tab-pane fade" id="admImport"><div class="card"><div class="card-header">Import Data Lama CSV/Excel</div><div class="card-body"><div class="alert alert-info small">Kolom yang dikenali: Cohort, Nama Orang Tua, Nama Kadet, Program Studi/Prodi, Domisili, Kabupaten/Kota, No HP, Status, Catatan.</div><input type="file" class="form-control mb-3" id="impFile" accept=".xlsx,.xls,.csv" onchange="parseImport(this)"><div id="importPreview"></div><button class="btn btn-marun d-none" id="btnImport" onclick="confirmImport()">Simpan Hasil Import</button></div></div></div>
@@ -249,7 +251,7 @@ function loading(on,t='Menghubungkan...'){
   // Saat proses data: badge status berubah kuning "Menyinkronkan".
   // Setelah selesai: kembali hijau "Online".
   if(on){syncCounter++;setStatusSync();}
-  else{syncCounter=Math.max(0,syncCounter-1);if(syncCounter===0)setStatusOnline();}
+  else{syncCounter=Math.max(0,syncCounter-1);}
 }
 async function api(payload,show=true){
   if(show)loading(true);
@@ -271,7 +273,7 @@ async function api(payload,show=true){
   }
 }
 function toggleSidebar(force){const open=force===undefined?!$('sidebar').classList.contains('open'):!!force;$('sidebar').classList.toggle('open',open);$('backdrop').classList.toggle('show',open)}
-const titles={dashboard:'Dashboard',input:'Input Data',anggota:'Data Anggota',laporan:'Rekap & Laporan',hubungi:'Hubungi Admin',profil:'Profil',admin:'Admin'};
+const titles={dashboard:'Dashboard',input:'Input Data',anggota:'Data Anggota',laporan:'Rekap & Laporan',hubungi:'Hubungi Admin',panduan:'Panduan',profil:'Profil',admin:'Admin'};
 function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('.side-link').forEach(a=>a.classList.toggle('active',a.dataset.page===p));$('pageTitle').textContent=titles[p]||p;toggleSidebar(false);if(p==='anggota')loadAnggota();if(p==='laporan'){setupLaporan();resetLaporanPreview();}if(p==='admin')applyAdminUI();}
 document.querySelectorAll('.side-link').forEach(a=>a.onclick=()=>showPage(a.dataset.page));
 function tick(){const d=new Date();$('clockBadge').innerHTML='<i class="fa-regular fa-clock me-1"></i>'+d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}setInterval(tick,30000);
@@ -301,7 +303,7 @@ function fillAllSelects(){
   $('f_status').innerHTML=opt('StatusData','Pilih Status Data');
   $('m_kategori').innerHTML=opt('KategoriPesan','Pilih Kategori Pesan');
 }
-function applySettings(){const st=S.settings;$('appVersion').textContent=st.appVersion||'1.0.0';$('sideTitle').textContent=st.orgTitle1||'KELUARGA BESAR KADET';$('sideSub').innerHTML=esc(st.orgTitle2||'UNHAN RI')+'<br>'+esc(st.orgTitle3||'KORDA JATENG-DIY');$('profilNama').textContent=st.orgName||'KELUARGA BESAR KADET UNHAN RI';$('profilSub').textContent=(st.orgTitle3||'KORDA JATENG-DIY');$('profilDesc').textContent=st.orgDesc||'';['set_t1','set_t2','set_t3','set_org','set_desc'].forEach(()=>{});$('set_t1').value=st.orgTitle1||'';$('set_t2').value=st.orgTitle2||'';$('set_t3').value=st.orgTitle3||'';$('set_org').value=st.orgName||'';$('set_desc').value=st.orgDesc||'';if(st.orgLogo){$('sideLogo').innerHTML='<img src="'+st.orgLogo+'">';$('profilLogo').innerHTML='<img src="'+st.orgLogo+'">';}}
+function applySettings(){const st=S.settings;$('appVersion').textContent=st.appVersion||'1.0.0';$('sideTitle').textContent=st.orgTitle1||'KELUARGA BESAR KADET';$('sideSub').innerHTML=esc(st.orgTitle2||'UNHAN RI')+'<br>'+esc(st.orgTitle3||'KORDA JATENG-DIY');$('profilNama').textContent=st.orgName||'KELUARGA BESAR KADET UNHAN RI';$('profilSub').textContent=(st.orgTitle3||'KORDA JATENG-DIY');$('profilDesc').textContent=st.orgDesc||'';['set_t1','set_t2','set_t3','set_org','set_desc'].forEach(()=>{});$('set_t1').value=st.orgTitle1||'';$('set_t2').value=st.orgTitle2||'';$('set_t3').value=st.orgTitle3||'';$('set_org').value=st.orgName||'';$('set_desc').value=st.orgDesc||'';if(st.orgLogo && /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/=]+$/i.test(st.orgLogo)){['sideLogo','profilLogo'].forEach(id=>{const img=document.createElement('img');img.src=st.orgLogo;$(id).replaceChildren(img)})}}
 function updateWilayahPreview(){const o=$('f_kab').selectedOptions[0];$('wilayahPreview').textContent='Wilayah: '+(o?.dataset?.wilayah||'-')}
 async function loadAnggota(show=true){const r=await api({action:'listAnggota'},show);if(r.ok){S.anggota=r.data||[];renderAnggota();}}
 function renderDashboard(){const d=S.dashboard||{};$('statTotal').textContent=d.totalAnggota||0;$('statCohort').textContent=d.cohortAktif||0;$('statProdi').textContent=d.totalProdi||0;$('statKab').textContent=d.totalKabKota||0;renderPengumumanDash(d.pengumuman||[]);renderWilayah(d.rekapWilayah||[]);renderTerbaru(d.dataTerbaru||[]);renderKelengkapan(d.dataPerluDilengkapi||{});drawMainChart(sortRowsForChart(d.rekapCohort,'cohort'),'Rekap Cohort');}
@@ -333,13 +335,16 @@ function drawMainChart(rows,title){
 }
 function hasAnggotaCriteria(){
   return Boolean(
+    ($('filterBelumLengkap') && $('filterBelumLengkap').checked) ||
     ($('cariText') && $('cariText').value.trim()) ||
     ($('filterCohort') && $('filterCohort').value) ||
     ($('filterProdi') && $('filterProdi').value) ||
     ($('filterKab') && $('filterKab').value)
   );
 }
-function filteredAnggota(){let q=$('cariText')?.value?.toLowerCase()||'',coh=$('filterCohort')?.value||'',pro=$('filterProdi')?.value||'',kab=$('filterKab')?.value||'';return S.anggota.filter(r=>(!q||Object.values(r).some(v=>String(v).toLowerCase().includes(q)))&&(!coh||String(r.Cohort)===coh)&&(!pro||r['Program Studi']===pro)&&(!kab||r['Kabupaten/Kota']===kab));}
+function filteredAnggota(){let q=$('cariText')?.value?.toLowerCase()||'',coh=$('filterCohort')?.value||'',pro=$('filterProdi')?.value||'',kab=$('filterKab')?.value||'';return S.anggota.filter(r=>(!$('filterBelumLengkap').checked||anggotaBelumLengkap(r))&&(!q||Object.values(r).some(v=>String(v).toLowerCase().includes(q)))&&(!coh||String(r.Cohort)===coh)&&(!pro||r['Program Studi']===pro)&&(!kab||r['Kabupaten/Kota']===kab));}
+function anggotaBelumLengkap(r){if(String(r['Status Data']||'').toLowerCase()==='nonaktif')return false;const wajib=['Cohort','Nama Orang Tua','Nama Kadet','Program Studi','Domisili Lengkap','Kabupaten/Kota','No HP'];return wajib.some(k=>!String(r[k]??'').trim()||(k==='No HP'&&String(r[k]).trim()==='-'));}
+function lihatBelumLengkap(){$('cariText').value='';['filterCohort','filterProdi','filterKab'].forEach(id=>$(id).value='');$('filterBelumLengkap').checked=true;showPage('anggota');}
 function statusClass(status){
   const s=String(status||'').toLowerCase();
   if(s==='lengkap') return 'status-lengkap';
@@ -383,6 +388,8 @@ function resetForm(){$('formAnggota').reset();$('f_id').value='';updateWilayahPr
 function editAnggota(id){const r=S.anggota.find(x=>x.ID===id);if(!r)return;showPage('input');$('f_id').value=r.ID;$('f_cohort').value=r.Cohort;$('f_prodi').value=r['Program Studi'];$('f_ortu').value=r['Nama Orang Tua'];$('f_kadet').value=r['Nama Kadet'];$('f_domisili').value=r['Domisili Lengkap'];$('f_kab').value=r['Kabupaten/Kota'];$('f_hp').value=r['No HP'];$('f_status').value=r['Status Data'];$('f_catatan').value=r.Catatan;updateWilayahPreview();}
 async function saveAnggota(e){
   e.preventDefault();
+  const hp=$('f_hp').value.trim();
+  if(hp && hp!=='-' && (!/^[+\d\s().-]+$/.test(hp)||normalisasiHpClient(hp).length<8||normalisasiHpClient(hp).length>15)){alert('Nomor HP harus berisi 8–15 digit setelah normalisasi, atau kosongkan jika belum diketahui.');$('f_hp').focus();return;}
   // Input data baru boleh dilakukan publik. Edit data lama tetap hanya admin.
   if(!S.token && $('f_id').value){alert('Edit data hanya bisa dilakukan oleh Admin.');return;}
 
@@ -403,7 +410,7 @@ Tetap simpan data ini sebagai Duplikat Terindikasi?`);
   const payload={action:'saveAnggota',data};
   if(S.token) payload.token=S.token;
   const r=await api(payload);
-  if(r.ok){alert(dup.length?'Data berhasil disimpan dengan status Duplikat Terindikasi':'Data berhasil disimpan');resetForm();await refreshAll();showPage('anggota')}else alert(r.error)
+  if(r.ok){alert(r.warning || 'Data berhasil disimpan. Status diperbarui sesuai data terbaru.');resetForm();await refreshAll();showPage('anggota')}else alert(r.error)
 }
 async function deleteAnggota(id){if(!S.token){alert('Login admin dulu');return}if(!confirm('Hapus data ini?'))return;const r=await api({action:'deleteAnggota',token:S.token,id});if(r.ok){await refreshAll();renderAnggota()}else alert(r.error)}
 async function refreshAll(){await loadBootstrap();await loadAnggota(false);renderDashboard();}
@@ -437,7 +444,30 @@ function getLapRows(){let j=$('lapJenis').value,n=String($('lapNilai').value||''
 function previewLaporan(){if(!$('lapJenis').value){alert('Silakan pilih jenis laporan terlebih dahulu.');resetLaporanPreview();return;}const rows=getLapRows();S.lapRows=rows;$('lapPreview').innerHTML=tableHTML(rows);}
 function tableHTML(rows){return `<table class="table table-bordered table-sm"><thead><tr><th>No</th><th>Cohort</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Kab/Kota</th><th>Wilayah</th><th>No HP</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.Cohort)}</td><td>${esc(r['Nama Kadet'])}</td><td>${esc(r['Nama Orang Tua'])}</td><td>${esc(r['Program Studi'])}</td><td>${esc(r['Kabupaten/Kota'])}</td><td>${esc(r.Wilayah)}</td><td>${esc(r['No HP'])}</td></tr>`).join('')||'<tr><td colspan="8" class="text-center">Tidak ada data</td></tr>'}</tbody></table><div class="small text-muted">Total: ${rows.length} data</div>`}
 function rowsToAOA(rows){return [['No','Cohort','Nama Kadet','Nama Orang Tua','Program Studi','Domisili','Kabupaten/Kota','Wilayah','No HP','Status Data'],...rows.map((r,i)=>[i+1,r.Cohort,r['Nama Kadet'],r['Nama Orang Tua'],r['Program Studi'],r['Domisili Lengkap'],r['Kabupaten/Kota'],r.Wilayah,r['No HP'],r['Status Data']])]}
-function exportPDF(){
+async function izinkanUnduh_(format){
+  if(!S.token){
+    const jenis=$('lapJenis');
+    const pilihan=jenis.value ? jenis.options[jenis.selectedIndex].text : 'belum dipilih';
+    const nilai=$('lapNilai');
+    const filter=nilai.value ? nilai.options[nilai.selectedIndex].text : 'semua';
+    showPage('hubungi');
+    const kategori=$('m_kategori');
+    const lainnya=Array.from(kategori.options).find(o=>o.value.toLowerCase()==='lainnya');
+    if(lainnya){kategori.value=lainnya.value;toggleKategoriLainnya();if(!$('m_kategori_lain').value.trim())$('m_kategori_lain').value='Permintaan Unduh Laporan';}
+    if(!$('m_pesan').value.trim()) $('m_pesan').value=`Yth. Admin, saya mengajukan permintaan laporan ${format}. Jenis: ${pilihan}; filter: ${filter}. Mohon informasi persetujuan dan pengiriman. Terima kasih.`;
+    alert('Unduhan perlu persetujuan admin. Silakan lengkapi dan kirim formulir Hubungi Admin.');
+    $('m_nama').focus();
+    return false;
+  }
+  // Verifikasi sesi ke backend; token yang hanya tersimpan di browser tidak cukup.
+  try{
+    const r=await api({action:'getSettings',token:S.token},false);
+    if(!r.ok){alert('Sesi admin tidak berlaku. Silakan login ulang.');return false;}
+    return true;
+  }catch(e){return false;}
+}
+async function exportPDF(){
+  if(!await izinkanUnduh_('PDF'))return;
   if(!$('lapJenis').value){alert('Silakan pilih jenis laporan terlebih dahulu.');return;}
   const rows=getLapRows();
   if(!rows.length){alert('Tidak ada data untuk PDF.');return;}
@@ -450,15 +480,15 @@ function exportPDF(){
   const head=[aoa[0]];
   const body=aoa.slice(1);
   if(doc.autoTable){
-    doc.autoTable({head:head,body:body,startY:66,styles:{fontSize:7,cellPadding:3,overflow:'linebreak'},headStyles:{fillColor:[139,30,30]},columnStyles:{0:{cellWidth:28},1:{cellWidth:42},2:{cellWidth:105},3:{cellWidth:105},4:{cellWidth:105},5:{cellWidth:120},6:{cellWidth:90},7:{cellWidth:70},8:{cellWidth:70},9:{cellWidth:70}}});
+    doc.autoTable({head:head,body:body,startY:66,styles:{fontSize:7,cellPadding:3,overflow:'linebreak'},headStyles:{fillColor:[139,30,30]},columnStyles:{0:{cellWidth:25},1:{cellWidth:35}}});
   }else{
-    doc.text(JSON.stringify(body.slice(0,20)),40,80);
+    alert('Plugin tabel PDF belum siap. Silakan coba lagi setelah halaman selesai dimuat.');return;
   }
   doc.save('Laporan_KBK_UNHAN.pdf');
 }
-function exportCSV(){const rows=getLapRows();const csv=rowsToAOA(rows).map(row=>row.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv'}),'Laporan_KBK_UNHAN.csv')}
-function exportExcel(){const rows=getLapRows();const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(rowsToAOA(rows));XLSX.utils.book_append_sheet(wb,ws,'Laporan');XLSX.writeFile(wb,'Laporan_KBK_UNHAN.xlsx')}
-function printLaporan(){if(!$('lapJenis').value){alert('Silakan pilih jenis laporan terlebih dahulu.');return;}const rows=getLapRows();$('printArea').innerHTML='<h3>KBK UNHAN RI Korda Jateng-DIY</h3><p>Laporan Data Anggota</p>'+tableHTML(rows);window.print();}
+async function exportCSV(){if(!await izinkanUnduh_('CSV'))return;const rows=getLapRows();const csv=rowsToAOA(rows).map(row=>row.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');download(new Blob(['\ufeff'+csv],{type:'text/csv'}),'Laporan_KBK_UNHAN.csv')}
+async function exportExcel(){if(!await izinkanUnduh_('Excel'))return;const rows=getLapRows();const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(rowsToAOA(rows));XLSX.utils.book_append_sheet(wb,ws,'Laporan');XLSX.writeFile(wb,'Laporan_KBK_UNHAN.xlsx')}
+async function printLaporan(){if(!await izinkanUnduh_('cetak'))return;if(!$('lapJenis').value){alert('Silakan pilih jenis laporan terlebih dahulu.');return;}const rows=getLapRows();$('printArea').innerHTML='<h3>KBK UNHAN RI Korda Jateng-DIY</h3><p>Laporan Data Anggota</p>'+tableHTML(rows);window.print();}
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function toggleKategoriLainnya(){
   const isLainnya=String($('m_kategori').value||'').toLowerCase()==='lainnya';
@@ -479,10 +509,46 @@ async function kirimPesan(e){
   if(r.ok){alert('Pesan berhasil dikirim ke admin');e.target.reset();toggleKategoriLainnya()}else alert(r.error)
 }
 async function login(e){e.preventDefault();const r=await api({action:'login',username:$('loginUser').value,password:$('loginPass').value});if(r.ok){S.token=r.token;S.user=r.username;sessionStorage.setItem('kbk_token',S.token);sessionStorage.setItem('kbk_user',S.user);applyAdminUI();alert('Login berhasil')}else alert(r.error)}
-function logout(){sessionStorage.removeItem('kbk_token');sessionStorage.removeItem('kbk_user');S.token='';S.user='';applyAdminUI()}
+async function logout(){const token=S.token;sessionStorage.removeItem('kbk_token');sessionStorage.removeItem('kbk_user');S.token='';S.user='';applyAdminUI();if(token){try{await api({action:'logout',token},false)}catch(e){alert('Sesi di browser telah dihapus, tetapi logout server gagal. Token server mungkin masih aktif.')}}}
 function applyAdminUI(){const on=!!S.token;$('adminLoginBox').classList.toggle('d-none',on);$('adminPanel').classList.toggle('d-none',!on);$('adminBadge').classList.toggle('d-none',!on);$('btnLogout').classList.toggle('d-none',!on);$('adminUserText').textContent=S.user||'Admin';if($('tbodyAnggota'))renderAnggota();}
-async function loadPesan(){if(!S.token)return;const r=await api({action:'listPesan',token:S.token});if(r.ok){$('tbPesan').innerHTML=(r.data||[]).reverse().map(m=>`<tr><td class="small">${esc(m.Waktu)}</td><td>${esc(m['Nama Pengirim'])}</td><td>${esc(m['No HP'])}</td><td>${esc(m.Kategori)}</td><td>${esc(m.Pesan)}</td><td><span class="${m.Status==='Baru'?'msg-new':''}">${esc(m.Status)}</span></td><td><button class="btn btn-sm btn-outline-success" onclick="updatePesan('${m.ID}','Selesai')">Selesai</button></td></tr>`).join('')||'<tr><td colspan="7" class="text-center">Belum ada pesan</td></tr>'}}
-async function updatePesan(id,status){const r=await api({action:'updatePesan',token:S.token,data:{ID:id,Status:status}});if(r.ok)loadPesan();else alert(r.error)}
+let pesanRows=[];
+async function loadPesan(){
+  if(!S.token)return;
+  const r=await api({action:'listPesan',token:S.token});
+  if(!r.ok){alert(r.error);return;}
+  pesanRows=(r.data||[]).slice().reverse();
+  renderPesan();
+}
+function renderPesan(){
+  const table=$('tbPesan');
+  $('jumlahPesanBaru').textContent='Pesan baru: '+pesanRows.filter(m=>String(m.Status).toLowerCase()==='baru').length;
+  const filter=$('filterPesan').value;
+  table.innerHTML=pesanRows.map((m,i)=>({m,i})).filter(x=>!filter||x.m.Status===filter).map(({m,i})=>`<tr><td class="small">${esc(m.Waktu)}</td><td>${esc(m['Nama Pengirim'])}</td><td>${esc(m['No HP'])}</td><td>${esc(m.Kategori)}</td><td>${esc(m.Pesan)}</td><td><span class="${m.Status==='Baru'?'msg-new':''}">${esc(m.Status)}</span></td><td><div class="d-flex gap-1 flex-wrap"><button type="button" class="btn btn-sm btn-outline-warning pesan-edit" data-idx="${i}">Edit</button>${m.Status!=='Selesai'?`<button type="button" class="btn btn-sm btn-outline-success pesan-selesai" data-idx="${i}">Selesai</button>`:`<button type="button" class="btn btn-sm btn-outline-danger pesan-hapus" data-idx="${i}">Hapus</button>`}</div></td></tr>`).join('')||'<tr><td colspan="7" class="text-center">Belum ada pesan</td></tr>';
+  table.querySelectorAll('.pesan-edit').forEach(b=>b.addEventListener('click',()=>editPesan(Number(b.dataset.idx))));
+  table.querySelectorAll('.pesan-selesai').forEach(b=>b.addEventListener('click',()=>updatePesan(pesanRows[Number(b.dataset.idx)].ID,'Selesai')));
+  table.querySelectorAll('.pesan-hapus').forEach(b=>b.addEventListener('click',()=>hapusPesan(Number(b.dataset.idx))));
+}
+function editPesan(i){
+  const m=pesanRows[i];if(!m)return;
+  const area=$('pesanEditArea');
+  const statuses=['Baru','Dibaca','Diproses','Selesai'];
+  if(m.Status&&!statuses.includes(m.Status))statuses.unshift(m.Status);
+  area.innerHTML=`<div class="card border-warning mb-3"><div class="card-header">Edit penanganan pesan</div><div class="card-body"><p class="small mb-2">Dari: <strong>${esc(m['Nama Pengirim'])}</strong> — ${esc(m.Kategori)}</p><form id="formEditPesan"><div class="row g-2"><div class="col-md-4"><label class="form-label">Status</label><select name="status" class="form-select">${statuses.map(x=>`<option value="${esc(x)}" ${m.Status===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="col-md-8"><label class="form-label">Catatan admin</label><input name="catatan" class="form-control" value="${esc(m['Catatan Admin'])}"><div class="form-text">Catatan kosong tidak menghapus catatan yang sudah ada.</div></div></div><div class="d-flex justify-content-end gap-2 mt-3"><button type="button" id="batalEditPesan" class="btn btn-light">Batal</button><button type="submit" class="btn btn-marun">Simpan</button></div></form></div></div>`;
+  $('batalEditPesan').addEventListener('click',()=>{area.innerHTML='';});
+  $('formEditPesan').addEventListener('submit',async event=>{
+    event.preventDefault();const form=event.currentTarget;const button=form.querySelector('[type="submit"]');button.disabled=true;
+    try{const r=await api({action:'updatePesan',token:S.token,data:{ID:m.ID,Status:form.elements.status.value,'Catatan Admin':form.elements.catatan.value}});if(!r.ok){alert(r.error);return;}area.innerHTML='';await loadPesan();}catch(e){console.error(e)}finally{button.disabled=false;}
+  });
+  area.scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function updatePesan(id,status){const r=await api({action:'updatePesan',token:S.token,data:{ID:id,Status:status}});if(r.ok){$('pesanEditArea').innerHTML='';await loadPesan();}else alert(r.error)}
+async function hapusPesan(i){
+  const m=pesanRows[i];if(!m||m.Status!=='Selesai')return;
+  if(!confirm('Hapus pesan yang sudah selesai dari '+String(m['Nama Pengirim']||'pengirim')+'? Pesan tidak dapat dikembalikan melalui aplikasi.'))return;
+  const r=await api({action:'deletePesan',token:S.token,id:m.ID});
+  if(!r.ok){alert(r.error);return;}
+  $('pesanEditArea').innerHTML='';await loadPesan();
+}
 async function savePengumuman(e){e.preventDefault();const data={ID:$('p_id').value,Tanggal:$('p_tanggal').value,Judul:$('p_judul').value,Isi:$('p_isi').value,Status:$('p_status').value};const r=await api({action:'savePengumuman',token:S.token,data});if(r.ok){e.target.reset();$('p_id').value='';loadPengumumanAdmin();await refreshAll()}else alert(r.error)}
 async function loadPengumumanAdmin(){const r=await api({action:'listPengumuman',token:S.token});if(r.ok){$('listPengumumanAdmin').innerHTML=(r.data||[]).map(p=>`<div class="announce"><div class="d-flex"><div><b>${esc(p.Judul)}</b><div class="small text-muted">${esc(p.Tanggal)} • ${esc(p.Status)}</div><div>${esc(p.Isi)}</div></div><button class="btn btn-sm btn-outline-warning ms-auto" onclick='editPeng(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Edit</button></div></div>`).join('')||'<div class="empty">Belum ada pengumuman</div>'}}
 function editPeng(p){$('p_id').value=p.ID;$('p_tanggal').value=String(p.Tanggal).substring(0,10);$('p_judul').value=p.Judul;$('p_isi').value=p.Isi;$('p_status').value=p.Status||'Tampil'}
@@ -690,13 +756,58 @@ function initPWA(){
   }));
 }
 
+let duplikatGroups=[];
 async function loadDuplikat(){
   if(!S.token){alert('Login admin dulu.');return;}
   const r=await api({action:'listDuplikat',token:S.token});
   if(!r.ok){alert(r.error);return;}
-  const groups=r.data||[];
-  if(!groups.length){$('duplikatBox').innerHTML='<div class="empty"><i class="fa-solid fa-check-circle"></i>Tidak ada duplikat berdasarkan 3 indikator.</div>';return;}
-  $('duplikatBox').innerHTML=groups.map((g,idx)=>`<div class="card mb-3" style="box-shadow:none;border:1px solid #eef2f6"><div class="card-header py-2"><b>Grup ${idx+1}</b> — Cohort ${esc(g.cohort)} • HP ${esc(g.hp)} • ${esc(g.kabupatenKota)} <span class="badge-soft ms-2">${g.jumlah} data</span></div><div class="card-body p-2"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>ID</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Domisili</th><th>Status</th></tr></thead><tbody>${g.data.map(d=>`<tr><td class="small">${esc(d.ID)}</td><td><b>${esc(d['Nama Kadet'])}</b></td><td>${esc(d['Nama Orang Tua'])}</td><td>${esc(d['Program Studi'])}</td><td>${esc(d['Domisili Lengkap'])}</td><td>${esc(d['Status Data'])}</td></tr>`).join('')}</tbody></table></div></div></div>`).join('');
+  duplikatGroups=r.data||[];
+  const box=$('duplikatBox');
+  if(!duplikatGroups.length){box.innerHTML='<div class="empty"><i class="fa-solid fa-check-circle"></i>Tidak ada duplikat berdasarkan 3 indikator.</div>';return;}
+  box.innerHTML='<div class="alert alert-info small">Indikasi duplikat bukan kepastian. Pilih Edit untuk memperbaiki data langsung di sini.</div><div id="dupEditArea"></div>'+duplikatGroups.map((g,idx)=>`<div class="card mb-3" style="box-shadow:none;border:1px solid #eef2f6"><div class="card-header py-2"><b>Grup ${idx+1}</b> — Cohort ${esc(g.cohort)} • HP ${esc(g.hp)} • ${esc(g.kabupatenKota)} <span class="badge-soft ms-2">${Number(g.jumlah)||0} data</span></div><div class="card-body p-2"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>ID</th><th>Nama Kadet</th><th>Orang Tua</th><th>Prodi</th><th>Domisili</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${g.data.map((d,j)=>`<tr><td class="small">${esc(d.ID)}</td><td><b>${esc(d['Nama Kadet'])}</b></td><td>${esc(d['Nama Orang Tua'])}</td><td>${esc(d['Program Studi'])}</td><td>${esc(d['Domisili Lengkap'])}</td><td>${esc(d['Status Data'])}</td><td><button type="button" class="btn btn-sm btn-outline-warning dup-edit" data-group="${idx}" data-row="${j}"><i class="fa-solid fa-pen me-1"></i>Edit</button></td></tr>`).join('')}</tbody></table></div></div></div>`).join('');
+  box.querySelectorAll('.dup-edit').forEach(btn=>btn.addEventListener('click',()=>openDuplikatEdit(Number(btn.dataset.group),Number(btn.dataset.row))));
+}
+function dupOptions(k,current){
+  const items=masterVals(k).map(x=>String(x.Nilai));
+  const val=String(current??'');
+  if(val && !items.includes(val)) items.unshift(val);
+  return '<option value="">-- Pilih --</option>'+items.map(v=>`<option value="${esc(v)}" ${v===val?'selected':''}>${esc(v)}</option>`).join('');
+}
+async function openDuplikatEdit(groupIndex,rowIndex){
+  const item=duplikatGroups[groupIndex]?.data?.[rowIndex];
+  if(!item)return;
+  // Ambil ulang data lengkap; daftar indikasi tidak menyertakan catatan atau waktu.
+  const result=await api({action:'listAnggota'},true);
+  if(!result.ok){alert(result.error);return;}
+  const row=(result.data||[]).find(x=>String(x.ID)===String(item.ID));
+  if(!row){alert('Data tidak ditemukan. Daftar duplikat akan dimuat ulang.');await loadDuplikat();return;}
+  const area=$('dupEditArea');
+  area.innerHTML=`<div class="card mb-3 border-warning"><div class="card-header">Edit data duplikat — ${esc(row.ID)}</div><div class="card-body"><form id="dupEditForm"><div class="row g-3">
+    <div class="col-md-4"><label class="form-label">Cohort</label><select name="cohort" class="form-select">${dupOptions('Cohort',row.Cohort)}</select></div>
+    <div class="col-md-8"><label class="form-label">Program Studi</label><select name="prodi" class="form-select">${dupOptions('Prodi',row['Program Studi'])}</select></div>
+    <div class="col-md-6"><label class="form-label">Nama Orang Tua</label><input name="ortu" class="form-control" value="${esc(row['Nama Orang Tua'])}"></div>
+    <div class="col-md-6"><label class="form-label">Nama Kadet</label><input name="kadet" class="form-control" value="${esc(row['Nama Kadet'])}" required></div>
+    <div class="col-12"><label class="form-label">Domisili Lengkap</label><textarea name="domisili" class="form-control" rows="2">${esc(row['Domisili Lengkap'])}</textarea></div>
+    <div class="col-md-6"><label class="form-label">Kabupaten/Kota</label><select name="kab" class="form-select">${dupOptions('KabKota',row['Kabupaten/Kota'])}</select></div>
+    <div class="col-md-6"><label class="form-label">No HP</label><input name="hp" class="form-control" value="${esc(row['No HP'])}"></div>
+    <div class="col-md-6"><label class="form-label">Status Data</label><select name="status" class="form-select"><option value="">Otomatis berdasarkan kelengkapan</option><option value="Duplikat Terindikasi" ${row['Status Data']==='Duplikat Terindikasi'?'selected':''}>Duplikat Terindikasi</option><option value="Nonaktif" ${row['Status Data']==='Nonaktif'?'selected':''}>Nonaktif</option></select><div class="form-text">Pilih otomatis setelah koreksi jika status duplikat tidak lagi sesuai.</div></div>
+    <div class="col-md-6"><label class="form-label">Catatan</label><input name="catatan" class="form-control" value="${esc(row.Catatan)}"></div>
+    </div><div class="d-flex gap-2 justify-content-end mt-3"><button type="button" class="btn btn-light" id="dupCancel">Batal</button><button class="btn btn-marun" type="submit">Simpan Perubahan</button></div></form></div></div>`;
+  $('dupCancel').addEventListener('click',()=>{area.innerHTML='';});
+  const form=$('dupEditForm');
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const f=form.elements;
+    const data={ID:row.ID,Cohort:f.cohort.value,'Nama Orang Tua':f.ortu.value,'Nama Kadet':f.kadet.value,'Program Studi':f.prodi.value,'Domisili Lengkap':f.domisili.value,'Kabupaten/Kota':f.kab.value,'No HP':f.hp.value,'Status Data':f.status.value,Catatan:f.catatan.value};
+    const button=form.querySelector('button[type="submit"]');button.disabled=true;
+    try{
+      const response=await api({action:'saveAnggota',token:S.token,data});
+      if(!response.ok){alert(response.error);return;}
+      alert(response.warning || 'Perubahan berhasil disimpan. Daftar indikasi akan diperbarui.');
+      await refreshAll();await loadDuplikat();
+    }catch(err){console.error(err)}finally{button.disabled=false;}
+  });
+  area.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 let LOG_ROWS=[];
@@ -723,5 +834,5 @@ function exportLogCSV(){
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5b39a24199ca8c1',t:'MTc5NDgwMTc2Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5b39a24199ca8c1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
